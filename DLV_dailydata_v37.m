@@ -1,4 +1,4 @@
-function OUT = DLV_dailydata_v37(cd,FN_BA,FN_ALS,FN_AHD,FN_DM,cd_H)
+function OUT = DLV_dailydata_v37(cd,FN_BA,FN_ALS,FN_AHD,FN_DM,cd_H,temp_dir)
 % This function produces the 'daily data' from the delaval backups
 % >>> software version v3.7
 %
@@ -20,43 +20,41 @@ function OUT = DLV_dailydata_v37(cd,FN_BA,FN_ALS,FN_AHD,FN_DM,cd_H)
 %
 %
 %% STEP 0: combine header and results files
-newdir = 'C:\Users\u0132268\Documents\LORE\MastiManResearch\Github\FarmData_mining\TEMPFILES\';    % in this folder we store the tempfiles
-
 % Basic Animal
 ba_H = readtable([cd_H FN_BA '_headers.txt'],'ReadVariableNames',0);    % read variable names
 ba_H = ba_H{:,:}';                          % convert to cell array and transpose
-writecell(ba_H,[newdir 'FN_BA.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_BA.txt"+' '"' cd FN_BA '.txt" "'  newdir 'FN_BA.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_BA.txt'],'r'); f=fread(fid,'*char')'; fclose(fid); % open en read combined data
+writecell(ba_H,[temp_dir 'FN_BA.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_BA.txt"+' '"' cd FN_BA '.txt" "'  temp_dir 'FN_BA.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_BA.txt'],'r'); f=fread(fid,'*char')'; fclose(fid); % open en read combined data
 f=f(1:length(f)-1); % remove last BOM character
-fid = fopen([newdir 'FN_BA.txt'],'w');fwrite(fid,f); fclose(fid); % rewrite and close
+fid = fopen([temp_dir 'FN_BA.txt'],'w');fwrite(fid,f); fclose(fid); % rewrite and close
 
 % Animal Lactation Summary
 als_H = readtable([cd_H FN_ALS '_headers.txt'],'ReadVariableNames',0);    % read variable names
 als_H = als_H{:,:}';                          % convert to cell array and transpose
-writecell(als_H,[newdir 'FN_ALS.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_ALS.txt"+' '"' cd FN_ALS '.txt" "'  newdir 'FN_ALS.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_ALS.txt'],'r'); f=fread(fid,'*char')'; fclose(fid); % open en read combined data
+writecell(als_H,[temp_dir 'FN_ALS.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_ALS.txt"+' '"' cd FN_ALS '.txt" "'  temp_dir 'FN_ALS.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_ALS.txt'],'r'); f=fread(fid,'*char')'; fclose(fid); % open en read combined data
 f=f(1:length(f)-1); % remove last BOM character
-fid = fopen([newdir 'FN_ALS.txt'],'w');fwrite(fid,f); fclose(fid);% rewrite and close
+fid = fopen([temp_dir 'FN_ALS.txt'],'w');fwrite(fid,f); fclose(fid);% rewrite and close
 
 % Animal Historical Data
 ahd_H = readtable([cd_H FN_AHD '_headers.txt'],'ReadVariableNames',0);    % read variable names
 ahd_H = ahd_H{:,:}';                          % convert to cell array and transpose
-writecell(ahd_H,[newdir 'FN_AHD.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_AHD.txt"+' '"' cd FN_AHD '.txt" "'  newdir 'FN_AHD.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_AHD.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);% open en read combined data
+writecell(ahd_H,[temp_dir 'FN_AHD.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_AHD.txt"+' '"' cd FN_AHD '.txt" "'  temp_dir 'FN_AHD.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_AHD.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);% open en read combined data
 f=f(1:length(f)-1);% remove last BOM character
-fid = fopen([newdir 'FN_AHD.txt'],'w');fwrite(fid,f); fclose(fid);% rewrite and close
+fid = fopen([temp_dir 'FN_AHD.txt'],'w');fwrite(fid,f); fclose(fid);% rewrite and close
 
 % Daily Milk
 dm_H = readtable([cd_H FN_DM '_headers.txt'],'ReadVariableNames',0);    % read variable names
 dm_H = dm_H{:,:}';                          % convert to cell array and transpose
-writecell(dm_H,[newdir 'FN_DM.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_DM.txt"+' '"' cd FN_DM '.txt" "'  newdir 'FN_DM.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_DM.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);% open en read combined data
+writecell(dm_H,[temp_dir 'FN_DM.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_DM.txt"+' '"' cd FN_DM '.txt" "'  temp_dir 'FN_DM.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_DM.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);% open en read combined data
 f=f(1:length(f)-1); % remove last BOM character
-fid = fopen([newdir 'FN_DM.txt'],'w');fwrite(fid,f); fclose(fid);% rewrite and close
+fid = fopen([temp_dir 'FN_DM.txt'],'w');fwrite(fid,f); fclose(fid);% rewrite and close
 
 clear als_H ba_H ahd_H dm_H ans
 
@@ -65,7 +63,7 @@ FN_BA = 'FN_BA';        % Basic Animal
 FN_ALS = 'FN_ALS';      % Animal Lactation Summary
 FN_AHD = 'FN_AHD';      % Animal Historical Data
 FN_DM = 'FN_DM';        % Daily Milk
-cd = newdir;            % new current directory
+cd = temp_dir;            % new current directory
 
 
 %% STEP 1 - load tables in matlab

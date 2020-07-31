@@ -20,16 +20,18 @@ datetime.setDefaultFormats('defaultdate','dd-MM-yyyy');
 %% STEP 1: Hard code directories
 
 % directory of txt files with data
-cd_txt = 'C:\Users\u0132268\Box Sync\LORE\MastiManResearch\Github\FarmData_mining\4.OUTPUT3txt\';       % all data files in txt format
-cd_H = 'C:\Users\u0132268\Box Sync\LORE\MastiManResearch\Github\FarmData_mining\4.OUTPUT3head\';        % all header files
+cd_txt = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\4.OUTPUT3txt\';       % all data files in txt format
+cd_H = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\4.OUTPUT3head\';        % all header files
+
+% temporary directory
+temp_dir = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\5.TEMPFILES\';
 
 % directory of output data
-savedir_DAY = 'C:\Users\u0132268\Box Sync\LORE\MastiManResearch\Github\FarmData_mining\5.ALLDAY\';
-savedir_MILK = 'C:\Users\u0132268\Box Sync\LORE\MastiManResearch\Github\FarmData_mining\5.ALLMILK\';
+savedir_DAY = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\6.ALLDAY\';
+savedir_MILK = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\6.ALLMILK\';
 
 
 %% Store and collect file data
-
 % find all the files in the folder
 FNfiles = ls(cd_txt);        % this is the list with files in the folder where I saved the MPR results of MCC
 ind = []; for i  = 1:size(FNfiles,1); if isempty(find(contains(FNfiles(i,:),'.txt'))) == 1; ind = [ind; i]; end; end; % find no filenames
@@ -91,7 +93,7 @@ for i = 1:length(Farms)
 
                 % define function to use based on version
                 fun = str2func(['DLV_dailydata_v' num2str(V*10)]);     % function to evaluate based on version
-                DAY.(Farms{i}).(D) = fun(cd_txt,FN_BA,FN_ALS,FN_AHD,FN_DM,cd_H);
+                DAY.(Farms{i}).(D) = fun(cd_txt,FN_BA,FN_ALS,FN_AHD,FN_DM,cd_H,temp_dir);
             else
                 FN_HA = files.FN{find(contains(files.Farm,Farms{i})== 1 & datenum(files.Date) == datenum(bakdates(j)) & contains(files.Table,'HistoryAnimal')==1,1,'first')};
                 FN_HALI = files.FN{find(contains(files.Farm,Farms{i})== 1 & datenum(files.Date) == datenum(bakdates(j)) & contains(files.Table,'HistoryAnimalLactationInfo')==1,1,'first')};
@@ -99,7 +101,7 @@ for i = 1:length(Farms)
 
                 % define function to use based on version
                 fun = str2func(['DLV_dailydata_v' num2str(V*10)]);     % function to evaluate based on version
-                DAY.(Farms{i}).(D) = fun(cd_txt,FN_HA,FN_HALI,FN_HADD,cd_H);
+                DAY.(Farms{i}).(D) = fun(cd_txt,FN_HA,FN_HALI,FN_HADD,cd_H,temp_dir);
 
             end
         end
@@ -181,7 +183,7 @@ for i = 1:length(Farms)
             
             % define function to use based on version
             fun = str2func(['DLV_milkdata_v' num2str(V*10)]);     % function to evaluate based on version
-            MILK.(Farms{i}).(D) = fun(cd_txt,FN_BA,FN_ALS,FN_AHD,FN_SMY,FN_VMY,cd_H);
+            MILK.(Farms{i}).(D) = fun(cd_txt,FN_BA,FN_ALS,FN_AHD,FN_SMY,FN_VMY,cd_H,temp_dir);
         else
             % define files FN_BA,FN_ALS,FN_AHD,FN_SMY,FN_SMY
             FN_BA = files.FN{find(contains(files.Farm,Farms{i})== 1 & datenum(files.Date) == datenum(bakdates(j)) & contains(files.Table,'BasicAnimal')==1,1,'first')};
@@ -191,7 +193,7 @@ for i = 1:length(Farms)
             
             % define function to use based on version
             fun = str2func(['DLV_milkdata_v' num2str(V*10)]);     % function to evaluate based on version
-            MILK.(Farms{i}).(D) = fun(cd_txt,FN_BA,FN_ALS,FN_SMY,FN_VMY,cd_H);
+            MILK.(Farms{i}).(D) = fun(cd_txt,FN_BA,FN_ALS,FN_SMY,FN_VMY,cd_H,temp_dir);
         end
     end
     

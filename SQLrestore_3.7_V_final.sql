@@ -13,18 +13,18 @@ BEGIN
 END;
 GO
 
----- delete pre-existing databases
+---- Delete pre-existing databases
 IF DB_ID ('DDM') IS NOT NULL 
 		DROP DATABASE DDM
 IF DB_ID ('DDMVMS') IS NOT NULL 
 		DROP DATABASE DDMVMS
 
 ---- Directories:
-DECLARE @DirInputData NVARCHAR(MAX) = 'C:\Users\u0132268\Box Sync\LORE\MastiManResearch\Github\FarmData_mining\1.INPUTDATA\Delaval\A1_3.7_V\'
-DECLARE @DirOutput1 NVARCHAR(MAX) = 'C:\Users\u0132268\Box Sync\LORE\MastiManResearch\Github\FarmData_mining\2.OUTPUT1\'
-DECLARE @DirOutput2 NVARCHAR(MAX) = 'C:\Users\u0132268\Box Sync\LORE\MastiManResearch\Github\FarmData_mining\3.OUTPUT2\'
-DECLARE @DirOutput3txt NVARCHAR(MAX) = 'C:\Users\u0132268\Box Sync\LORE\MastiManResearch\Github\FarmData_mining\4.OUTPUT3txt\'
-DECLARE @DirOutput3head NVARCHAR(MAX) = 'C:\Users\u0132268\Box Sync\LORE\MastiManResearch\Github\FarmData_mining\4.OUTPUT3head\'
+DECLARE @DirInputData NVARCHAR(MAX) = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\1.INPUTDATA\Delaval\A1_3.7_V\'
+DECLARE @DirOutput1 NVARCHAR(MAX) = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\2.OUTPUT1\'
+DECLARE @DirOutput2 NVARCHAR(MAX) = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\3.OUTPUT2\'
+DECLARE @DirOutput3txt NVARCHAR(MAX) = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\4.OUTPUT3txt\'
+DECLARE @DirOutput3head NVARCHAR(MAX) = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\4.OUTPUT3head\'
 DECLARE @DirZipExe NVARCHAR(MAX) = 'C:\"Program Files"\7-Zip\7z.exe'
 
 
@@ -125,10 +125,8 @@ INSERT INTO @FilesCmdshell SELECT * FROM  @FilesCmdshell2 WHERE isfile=0 --AND R
 
 SET @FilesCmdshellCursor = CURSOR FOR SELECT outputCmd FROM @FilesCmdshell
 
-EXEC master.dbo.sp_configure 'show advanced options', 1
-RECONFIGURE
-EXEC master.dbo.sp_configure 'xp_cmdshell', 1
-RECONFIGURE 
+EXEC master.dbo.sp_configure 'show advanced options', 1; RECONFIGURE
+EXEC master.dbo.sp_configure 'xp_cmdshell', 1; RECONFIGURE 
 
 -- start for loop, for every file in the farmfiles folder that ends with .bak
 OPEN @FilesCmdshellCursor
@@ -148,10 +146,9 @@ BEGIN
 		-- Detect the name of the new database (DDM or DDMVMS)
 		DELETE FROM @Table;
 		SET @PathToBackup = ''+@DirOutput1+'' + SUBSTRING(@FilesCmdshellOutputCmd, 0, len(@FilesCmdshellOutputCmd)+1)+'\DelPro.bak'
-		INSERT INTO @Table
-			EXEC('RESTORE FILELISTONLY FROM DISK=''' +@PathToBackup+ '''')
-		SET @LogicalNameData=(SELECT LogicalName FROM @Table WHERE Type='D')
-		SET @LogicalNameLog=(SELECT LogicalName FROM @Table WHERE Type='L')
+		INSERT INTO @Table EXEC('RESTORE FILELISTONLY FROM DISK=''' +@PathToBackup+ '''')
+			SET @LogicalNameData=(SELECT LogicalName FROM @Table WHERE Type='D')
+			SET @LogicalNameLog=(SELECT LogicalName FROM @Table WHERE Type='L')
 
 		--command to restore new database
 		SET @sqlRestore  = 'RESTORE DATABASE [' +@LogicalNameData +'] 

@@ -1,4 +1,4 @@
-function OUT = DLV_milkdata_v55(cd,FN_BA,FN_ALS,FN_SMY,FN_VMY,cd_H)
+function OUT = DLV_milkdata_v55(cd,FN_BA,FN_ALS,FN_SMY,FN_VMY,cd_H,temp_dir)
 % This function constructs the 'milk data' from the delaval backups
 % >>> software version v5.5
 %
@@ -17,43 +17,41 @@ function OUT = DLV_milkdata_v55(cd,FN_BA,FN_ALS,FN_SMY,FN_VMY,cd_H)
 % STEP 4: Preprocessing to correct for errors
 %
 %% STEP 0: combine header and results files
-newdir = 'C:\Users\u0132268\Documents\LORE\MastiManResearch\Github\FarmData_mining\TEMPFILES\';    % in this folder we store the tempfiles
-
 % Basic Animal
 ba_H = readtable([cd_H FN_BA '_headers.txt'],'ReadVariableNames',0);    % read variable names
 ba_H = ba_H{:,:}';                          % convert to cell array and transpose
-writecell(ba_H,[newdir 'FN_BA.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_BA.txt"+' '"' cd FN_BA '.txt" "'  newdir 'FN_BA.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_BA.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
+writecell(ba_H,[temp_dir 'FN_BA.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_BA.txt"+' '"' cd FN_BA '.txt" "'  temp_dir 'FN_BA.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_BA.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
 f=f(1:length(f)-1);
-fid = fopen([newdir 'FN_BA.txt'],'w');fwrite(fid,f); fclose(fid);
+fid = fopen([temp_dir 'FN_BA.txt'],'w');fwrite(fid,f); fclose(fid);
 
 % Animal Lactation Summary
 als_H = readtable([cd_H FN_ALS '_headers.txt'],'ReadVariableNames',0);    % read variable names
 als_H = als_H{:,:}';                          % convert to cell array and transpose
-writecell(als_H,[newdir 'FN_ALS.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_ALS.txt"+' '"' cd FN_ALS '.txt" "'  newdir 'FN_ALS.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_ALS.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
+writecell(als_H,[temp_dir 'FN_ALS.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_ALS.txt"+' '"' cd FN_ALS '.txt" "'  temp_dir 'FN_ALS.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_ALS.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
 f=f(1:length(f)-1);
-fid = fopen([newdir 'FN_ALS.txt'],'w');fwrite(fid,f); fclose(fid);
+fid = fopen([temp_dir 'FN_ALS.txt'],'w');fwrite(fid,f); fclose(fid);
 
 % Session Milk Yield
 smy_H = readtable([cd_H FN_SMY '_headers.txt'],'ReadVariableNames',0);    % read variable names
 smy_H = smy_H{:,:}';                          % convert to cell array and transpose
-writecell(smy_H,[newdir 'FN_SMY.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_SMY.txt"+' '"' cd FN_SMY '.txt" "'  newdir 'FN_SMY.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_SMY.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
+writecell(smy_H,[temp_dir 'FN_SMY.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_SMY.txt"+' '"' cd FN_SMY '.txt" "'  temp_dir 'FN_SMY.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_SMY.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
 f=f(1:length(f)-1);
-fid = fopen([newdir 'FN_SMY.txt'],'w');fwrite(fid,f); fclose(fid);
+fid = fopen([temp_dir 'FN_SMY.txt'],'w');fwrite(fid,f); fclose(fid);
 
 % Voluntary Session Milk Yield
 vmy_H = readtable([cd_H FN_VMY '_headers.txt'],'ReadVariableNames',0);    % read variable names
 vmy_H = vmy_H{:,:}';                          % convert to cell array and transpose
-writecell(vmy_H,[newdir 'FN_VMY.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_VMY.txt"+' '"' cd FN_VMY '.txt" "'  newdir 'FN_VMY.txt"']);  % combine files using system cmd
-fid  = fopen([newdir 'FN_VMY.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
+writecell(vmy_H,[temp_dir 'FN_VMY.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_VMY.txt"+' '"' cd FN_VMY '.txt" "'  temp_dir 'FN_VMY.txt"']);  % combine files using system cmd
+fid  = fopen([temp_dir 'FN_VMY.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
 f = strrep(f,'=ja;','deletesemicolon');f = strrep(f,';TotalFlow','deletesemicolon');f = strrep(f,';MsEv','deletesemicolon');f = strrep(f,';KFC','deletesemicolon');f=f(1:length(f)-1);
-fid  = fopen([newdir 'FN_VMY.txt'],'w'); fwrite(fid,f);fclose(fid);
+fid  = fopen([temp_dir 'FN_VMY.txt'],'w'); fwrite(fid,f);fclose(fid);
 
 clear als_H ba_H smy_H vmy_H ans
 
@@ -62,7 +60,7 @@ FN_BA = 'FN_BA';        % Basic Animal
 FN_ALS = 'FN_ALS';      % Animal Lactation Summary
 FN_SMY = 'FN_SMY';      % Session Milk Yield
 FN_VMY = 'FN_VMY';      % Voluntary Session Milk Yield
-cd = newdir;            % new current directory
+cd = temp_dir;            % new current directory
 
 
 %% STEP 1 - load tables in matlab

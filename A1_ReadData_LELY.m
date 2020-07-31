@@ -18,12 +18,21 @@ close all
 clc
 datetime.setDefaultFormats('defaultdate','dd-MM-yyyy');
 
-%% Store and collect file data
+%% STEP 1: Hard code directories
 
 % directory of txt files with data
-cd = 'C:\Users\u0132268\Documents\LORE\MastiManResearch\Github\FarmData_mining\OUTPUT_Lelytxt\';     % all data files in txt format
-cd_H = 'C:\Users\u0132268\Documents\LORE\MastiManResearch\Github\FarmData_mining\OUTPUT_Lelyhead\';   % all header files
+cd_txt = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\4.OUTPUT3txt\';       % all data files in txt format
+cd_H = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\4.OUTPUT3head\';        % all header files
 
+% temporary directory
+temp_dir = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\5.TEMPFILES\';
+
+% directory of output data
+savedir_DAY = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\6.ALLDAY\';
+savedir_MILK = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\6.ALLMILK\';
+
+
+%% Store and collect file data
 % find all the files in the folder
 FNfiles = ls(cd);        % this is the list with files in the folder where I saved the MPR results of MCC
 ind = []; for i  = 1:size(FNfiles,1); if isempty(find(contains(FNfiles(i,:),'.txt'))) == 1; ind = [ind; i]; end; end; % find no filenames
@@ -76,7 +85,7 @@ for i = 1:length(Farms)
         FN_ANI = files.FN{find(contains(files.Farm,Farms{i})== 1 & datenum(files.Date) == datenum(bakdates(j)) & contains(files.Table,'HemAnimal')==1,1,'first')};
         
         % run function to extract and combine data
-        DAY.(Farms{i}).(D) = LELY_dailydata(cd,FN_MDP,FN_LAC,FN_ANI,cd_H);
+        DAY.(Farms{i}).(D) = LELY_dailydata(cd,FN_MDP,FN_LAC,FN_ANI,cd_H,temp_dir);
     end
     
     % find unique rows
@@ -136,7 +145,7 @@ for i = 1:20%length(Farms)
         FN_MVIS = files.FN{find(contains(files.Farm,Farms{i})== 1 & datenum(files.Date) == datenum(bakdates(j)) & contains(files.Table,'PrmMilkVisit')==1,1,'first')};
 
         % run function to extract and combine data
-        MILK.(Farms{i}).(D) = LELY_milkdata(cd,FN_DEV,FN_LAC,FN_ANI,FN_MVIS,cd_H);
+        MILK.(Farms{i}).(D) = LELY_milkdata(cd,FN_DEV,FN_LAC,FN_ANI,FN_MVIS,cd_H,temp_dir);
     end
     
     % find unique rows

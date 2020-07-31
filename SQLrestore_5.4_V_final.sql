@@ -20,11 +20,11 @@ IF DB_ID ('DDMVMS') IS NOT NULL
 		DROP DATABASE DDMVMS
 
 ---- Directories:
-DECLARE @DirInputData NVARCHAR(MAX) = 'C:\Users\u0132268\Box Sync\LORE\MastiManResearch\Github\FarmData_mining\1.INPUTDATA\Delaval\A4_5.4_V\'
-DECLARE @DirOutput1 NVARCHAR(MAX) = 'C:\Users\u0132268\Box Sync\LORE\MastiManResearch\Github\FarmData_mining\2.OUTPUT1\'
-DECLARE @DirOutput2 NVARCHAR(MAX) = 'C:\Users\u0132268\Box Sync\LORE\MastiManResearch\Github\FarmData_mining\3.OUTPUT2\'
-DECLARE @DirOutput3txt NVARCHAR(MAX) = 'C:\Users\u0132268\Box Sync\LORE\MastiManResearch\Github\FarmData_mining\4.OUTPUT3txt\'
-DECLARE @DirOutput3head NVARCHAR(MAX) = 'C:\Users\u0132268\Box Sync\LORE\MastiManResearch\Github\FarmData_mining\4.OUTPUT3head\'
+DECLARE @DirInputData NVARCHAR(MAX) = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\1.INPUTDATA\Delaval\A4_5.4_5.5_V\'
+DECLARE @DirOutput1 NVARCHAR(MAX) = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\2.OUTPUT1\'
+DECLARE @DirOutput2 NVARCHAR(MAX) = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\3.OUTPUT2\'
+DECLARE @DirOutput3txt NVARCHAR(MAX) = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\4.OUTPUT3txt\'
+DECLARE @DirOutput3head NVARCHAR(MAX) = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\4.OUTPUT3head\'
 DECLARE @DirZipExe NVARCHAR(MAX) = 'C:\"Program Files"\7-Zip\7z.exe'
 
 ------------------------------------------------ B. UNZIP BACKUP FILES ----------------------------------------------------------------------------
@@ -43,7 +43,6 @@ DECLARE @PreMapOutput NVARCHAR(MAX)
 -- make a table containing a list of all zipfiles in the specified directory
 INSERT @PreFilesCmdshell2 (outputCmd,depth,isfile) EXEC ('master.sys.xp_dirtree ''' +@DirInputData+''',1,1;')
 INSERT INTO @PreFilesCmdshell SELECT * FROM  @PreFilesCmdshell2 WHERE isfile=1 AND RIGHT(outputCmd,4) = '.zip';
-
 
 -- unzip all zip files specified in the list above
 SET @PreFilesCmdshellCursor = CURSOR FOR SELECT outputCmd FROM @PreFilesCmdshell
