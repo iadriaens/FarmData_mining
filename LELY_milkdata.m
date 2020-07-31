@@ -18,7 +18,7 @@ function OUT = LELY_milkdata(cd,FN_DEV,FN_LAC,FN_ANI,FN_MVIS,cd_H)
 % STEP 4: Check and correct for errors
 %
 %% STEP 0: combine header and results files
-newdir = 'C:\Users\u0084712\Documents\Box Sync\Documents\MastiMan\Research\Data mining\BAKfiles scripts\tempFiles\';    % in this folder we store the tempfiles
+newdir = 'C:\Users\u0132268\Documents\LORE\MastiManResearch\Github\FarmData_mining\TEMPFILES\';    % in this folder we store the tempfiles
 
 % PrmDeviceVisit
 dv_H = readtable([cd_H FN_DEV '_headers.txt'],'ReadVariableNames',0);    % read variable names
@@ -78,7 +78,7 @@ clear i j FN_MVIS FN_DEV FN_LAC FN_ANI cd ext
 
 % Read tables
 % HEMANIMAL
-opts = detectImportOptions(FN{1}); 
+opts = detectImportOptions(FN{1},'Delimiter',';'); 
 opts.SelectedVariableNames = {'AniId','AniName','AniUserNumber','AniLifeNumber','AniBirthday'};
 opts = setvartype(opts,{'AniId','AniUserNumber'},'double');
 opts = setvartype(opts,{'AniName','AniLifeNumber'},'char');
@@ -86,21 +86,21 @@ opts = setvartype(opts,{'AniBirthday'},'datetime');
 a = readtable(FN{1},opts);   % HemAnimal
 
 % REMLACTATION
-opts = detectImportOptions(FN{2}); 
+opts = detectImportOptions(FN{2},'Delimiter',';'); 
 opts.SelectedVariableNames = {'LacId','LacAniId','LacNumber','LacCalvingDate'};
 opts = setvartype(opts,{'LacId','LacAniId','LacNumber'},'double');
 opts = setvartype(opts,{'LacCalvingDate'},'datetime');
 b = readtable(FN{2},opts);   % RemLactation
 
 % PRMDEVICEVISIT
-opts = detectImportOptions(FN{3}); 
+opts = detectImportOptions(FN{3},'Delimiter',';'); 
 opts.SelectedVariableNames = {'DviId','DviAniId','DviStartTime','DviEndTime','DviIntervalTime'};
 opts = setvartype(opts,{'DviId','DviAniId','DviIntervalTime'},'double');
 opts = setvartype(opts,{'DviStartTime','DviEndTime'},'datetime');
 c = readtable(FN{3},opts);   % PrmDeviceVisit
 
 % PRMMILKVISIT
-opts = detectImportOptions(FN{4}); 
+opts = detectImportOptions(FN{4},'Delimiter',';'); 
 opts.SelectedVariableNames = {'MviId','MviDviId','MviMilkYield','MviMilkDuration','MviMilkSpeedMax','MviWeight','MviMilkTemperature','MviMilkDestination','MviMilkTime','MviLFMilkYield','MviRFMilkYield','MviLRMilkYield','MviRRMilkYield','MviLFConductivity','MviRFConductivity','MviLRConductivity','MviRRConductivity'};
 opts = setvartype(opts,{'MviId','MviDviId','MviMilkYield','MviMilkDuration','MviMilkSpeedMax','MviWeight','MviMilkTemperature','MviMilkDestination','MviMilkTime','MviLFMilkYield','MviRFMilkYield','MviLRMilkYield','MviRRMilkYield','MviLFConductivity','MviRFConductivity','MviLRConductivity','MviRRConductivity'},'double');
 d = readtable(FN{4},opts);   % PrmMilkVisit

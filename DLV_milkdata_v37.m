@@ -18,7 +18,7 @@ function OUT = DLV_milkdata_v37(cd,FN_BA,FN_ALS,FN_AHD,FN_SMY,FN_VMY,cd_H)
 % STEP 4: Preprocessing to correct for errors
 %
 %% STEP 0: combine header and results files
-newdir = 'C:\Users\u0084712\Documents\Box Sync\Documents\MastiMan\Research\Data mining\BAKfiles scripts\tempFiles\';    % in this folder we store the tempfiles
+newdir = 'C:\Users\u0132268\Documents\LORE\MastiManResearch\Github\FarmData_mining\TEMPFILES\';    % in this folder we store the tempfiles
 
 % Basic Animal
 ba_H = readtable([cd_H FN_BA '_headers.txt'],'ReadVariableNames',0);    % read variable names
@@ -93,7 +93,7 @@ clear i j FN_BA FN_ALS FN_AHD FN_DM FNS cd ext FN_SMY FN_VMY
 
 % read tables
 % BASIC ANIMAL
-opts = detectImportOptions(FN{1});
+opts = detectImportOptions(FN{1},'Delimiter',';');
 opts = setvartype(opts,{'OID','Number'},'double');
 opts = setvartype(opts,{'BirthDate'},'datetime');
 opts = setvartype(opts,{'OfficialRegNo','Name'},'char'); % set var type to char
@@ -101,27 +101,27 @@ opts.SelectedVariableNames = {'OID','Number','OfficialRegNo','Name','BirthDate'}
 a = readtable(FN{1},opts);
     
 % ANIMAL LACTATION SUMMARY
-opts = detectImportOptions(FN{2});
+opts = detectImportOptions(FN{2},'Delimiter',';');
 opts = setvartype(opts,{'OID','Animal','LactationNumber'},'double');
 opts = setvartype(opts,{'StartDate'},'datetime');
 opts.SelectedVariableNames = {'OID','Animal','LactationNumber','StartDate'};
 b = readtable(FN{2},opts);   % ALS
 
 % ANIMAL HISTORICAL DATA
-opts = detectImportOptions(FN{3});
+opts = detectImportOptions(FN{3},'Delimiter',';');
 opts = setvartype(opts,{'OID','BasicAnimal','DIM','LactationNumber'},'double');
 opts = setvartype(opts,{'DateAndTime','EndTime','PreviousEndTime'},'datetime');
 opts.SelectedVariableNames = {'OID','DateAndTime','BasicAnimal','DIM','LactationNumber','EndTime','PreviousEndTime'};
 c = readtable(FN{3},opts);
 
 % SESSION MILK YIELD
-opts = detectImportOptions(FN{4});
+opts = detectImportOptions(FN{4},'Delimiter',';');
 opts = setvartype(opts,{'OID','TotalYield','Destination','SessionNo'},'double');
 opts.SelectedVariableNames = {'OID','TotalYield','Destination','SessionNo'};
 d = readtable(FN{4},opts);               % SMY
 
 % VOLUNTARY SESSION MILK YIELD
-opts = detectImportOptions(FN{5});
+opts = detectImportOptions(FN{5},'Delimiter',';');
 opts = setvartype(opts,{'OID','QuarterLFYield','QuarterRFYield','QuarterLRYield','QuarterRRYield','ConductivityLF','ConductivityRF','ConductivityLR','ConductivityRR','BloodLF','BloodRF','BloodLR','BloodRR','PeakFlowLF','PeakFlowRF','PeakFlowLR','PeakFlowRR','MeanFlowLF','MeanFlowRF','MeanFlowLR','MeanFlowRR','Mdi','NotMilkedTeats','Incomplete','Kickoff','MilkType'},'double');
 opts.SelectedVariableNames = {'OID','QuarterLFYield','QuarterRFYield','QuarterLRYield','QuarterRRYield','ConductivityLF','ConductivityRF','ConductivityLR','ConductivityRR','BloodLF','BloodRF','BloodLR','BloodRR','PeakFlowLF','PeakFlowRF','PeakFlowLR','PeakFlowRR','MeanFlowLF','MeanFlowRF','MeanFlowLR','MeanFlowRR','Mdi','NotMilkedTeats','Incomplete','Kickoff','MilkType'};
 e = readtable(FN{5},opts);               % VMY

@@ -19,7 +19,7 @@ function OUT = LELY_dailydata(cd,FN_MDP,FN_LAC,FN_ANI,cd_H)
 %
 %
 %% STEP 0: combine header and results files
-newdir = 'C:\Users\u0084712\Documents\Box Sync\Documents\MastiMan\Research\Data mining\BAKfiles scripts\tempFiles\';    % in this folder we store the tempfiles
+newdir = 'C:\Users\u0132268\Documents\LORE\MastiManResearch\Github\FarmData_mining\TEMPFILES\';    % in this folder we store the tempfiles
 
 % PrmMilkDayProduction
 mdp_H = readtable([cd_H FN_MDP '_headers.txt'],'ReadVariableNames',0);    % read variable names
@@ -69,7 +69,7 @@ clear i j FN_MDP FN_LAC FN_ANI cd ext
 
 % Read tables
 %   HEMANIMAL
-opts = detectImportOptions(FN{1}); % detect import options
+opts = detectImportOptions(FN{1},'Delimiter',';'); % detect import options
 opts.SelectedVariableNames = {'AniId','AniName','AniUserNumber','AniLifeNumber','AniBirthday'}; % select variable names
 opts = setvartype(opts,{'AniId','AniUserNumber'},'double');  % set variable type to double
 opts = setvartype(opts,{'AniName','AniLifeNumber'},'char');  % set variable type to char
@@ -77,14 +77,14 @@ opts = setvartype(opts,{'AniBirthday'},'datetime');          % set variable type
 a = readtable(FN{1},opts);   % read table
 
 %   REMLACTATION
-opts = detectImportOptions(FN{2});  % detect import options
+opts = detectImportOptions(FN{2},'Delimiter',';');  % detect import options
 opts.SelectedVariableNames = {'LacId','LacAniId','LacNumber','LacCalvingDate'}; % select variable names
 opts = setvartype(opts,{'LacId','LacAniId','LacNumber'},'double'); % set variable type to double
 opts = setvartype(opts,{'LacCalvingDate'},'datetime'); % set variable type to datetime
 b = readtable(FN{2},opts);   % read table
 
 %   PRMMILKDAYPRODUCTION
-opts = detectImportOptions(FN{3});  % detect import options
+opts = detectImportOptions(FN{3},'Delimiter',';');  % detect import options
 opts.SelectedVariableNames = {'MdpId','MdpAniId','MdpProductionDate','MdpDayProduction','MdpISK','MdpMilkings','MdpRefusals','MdpFailures','MdpFatPercentage','MdpProteinPercentage','MdpLactosePercentage','MdpSCC','MdpAverageWeight'};  % select variable names
 opts = setvartype(opts,{'MdpId','MdpAniId','MdpDayProduction','MdpISK','MdpMilkings','MdpRefusals','MdpFailures','MdpFatPercentage','MdpProteinPercentage','MdpLactosePercentage','MdpSCC','MdpAverageWeight'},'double'); % set variable type to double
 opts = setvartype(opts,{'MdpProductionDate'},'datetime'); % set variable type to datetime

@@ -20,7 +20,7 @@ function OUT = DLV_dailydata_v37(cd,FN_BA,FN_ALS,FN_AHD,FN_DM,cd_H)
 %
 %
 %% STEP 0: combine header and results files
-newdir = 'C:\Users\u0084712\Documents\Box Sync\Documents\MastiMan\Research\Data mining\BAKfiles scripts\tempFiles\';    % in this folder we store the tempfiles
+newdir = 'C:\Users\u0132268\Documents\LORE\MastiManResearch\Github\FarmData_mining\TEMPFILES\';    % in this folder we store the tempfiles
 
 % Basic Animal
 ba_H = readtable([cd_H FN_BA '_headers.txt'],'ReadVariableNames',0);    % read variable names

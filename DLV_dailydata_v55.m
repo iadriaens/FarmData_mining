@@ -19,7 +19,7 @@ function OUT = DLV_dailydata_v55(cd,FN_HA,FN_HALI,FN_HADD,cd_H)
 %
 %
 %% STEP 0: combine header and results files
-newdir = 'C:\Users\u0084712\Documents\Box Sync\Documents\MastiMan\Research\Data mining\BAKfiles scripts\tempFiles\';    % in this folder we store the tempfiles
+newdir = 'C:\Users\u0132268\Box Sync\LORE\MastiManResearch\Github\FarmData_mining\TEMPFILES\';    % in this folder we store the tempfiles
 
 % History Animal
 ha_H = readtable([cd_H FN_HA '_headers.txt'],'ReadVariableNames',0);    % read variable names
@@ -67,21 +67,21 @@ end
 clear i FN_HA FN_HALI FN_HADD FNS cd
 
 %   HISTORY ANIMAL
-opts = detectImportOptions(FN{1});  % detect import options
+opts = detectImportOptions(FN{1},'Delimiter',';');  % detect import options
 opts.SelectedVariableNames = {'OID','ReferenceId','Number','OffRegNumber','Name','BirthDate'};% selected variable names
 opts = setvartype(opts,{'OID','ReferenceId','Number'},'double'); % set var type to double
 opts = setvartype(opts,{'BirthDate'},'datetime'); % set var type to datetime
 a = readtable(FN{1},opts);  % read table 
 
 %   HISTORY ANIMAL LACTATION INFO
-opts = detectImportOptions(FN{2});  % detect import options
+opts = detectImportOptions(FN{2},'Delimiter',';');  % detect import options
 opts.SelectedVariableNames = {'OID','Animal','LactationNumber','StartDate'};% selected variable names
 opts = setvartype(opts,{'OID','Animal','LactationNumber'},'double');% set var type to double
 opts = setvartype(opts,{'StartDate'},'datetime');
 b = readtable(FN{2},opts); % read table 
 
 % 	HISTORY ANIMAL DAILY DATA
-opts = detectImportOptions(FN{3}); % detect import options
+opts = detectImportOptions(FN{3},'Delimiter',';'); % detect import options
 opts.SelectedVariableNames = {'OID','BasicAnimal','DayDate','Animal','DIM','LactationNumber','DailyYield','Last7DayAvg','MilkingDurationInSec','Milkings','Kickoffs','Incompletes'};% selected variable names
 opts = setvartype(opts,{'OID','BasicAnimal','DIM','Animal','LactationNumber','DailyYield','Last7DayAvg','MilkingDurationInSec','Milkings','Kickoffs','Incompletes'},'double');% set var type to double
 opts = setvartype(opts,{'DayDate'},'datetime'); % set var type to datetime
