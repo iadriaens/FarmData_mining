@@ -1,4 +1,4 @@
-function OUT = LELY_dailydata(cd,FN_MDP,FN_LAC,FN_ANI,cd_H)
+function OUT = LELY_dailydata(cd,FN_MDP,FN_LAC,FN_ANI,cd_H,temp_dir)
 % This function produces the 'daily data' from the lely backups
 % >>> all software versions
 %
@@ -19,34 +19,32 @@ function OUT = LELY_dailydata(cd,FN_MDP,FN_LAC,FN_ANI,cd_H)
 %
 %
 %% STEP 0: combine header and results files
-newdir = 'C:\Users\u0084712\Documents\Box Sync\Documents\MastiMan\Research\Data mining\BAKfiles scripts\tempFiles\';    % in this folder we store the tempfiles
-
 % PrmMilkDayProduction
 mdp_H = readtable([cd_H FN_MDP '_headers.txt'],'ReadVariableNames',0);    % read variable names
 mdp_H = mdp_H{:,:}';                          % convert to cell array and transpose
-writecell(mdp_H,[newdir 'FN_MDP.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_MDP.txt"+' '"' cd FN_MDP '.txt" "'  newdir 'FN_MDP.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_MDP.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
+writecell(mdp_H,[temp_dir 'FN_MDP.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_MDP.txt"+' '"' cd FN_MDP '.txt" "'  temp_dir 'FN_MDP.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_MDP.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
 f=f(1:length(f)-1);
-fid = fopen([newdir 'FN_MDP.txt'],'w');fwrite(fid,f); fclose(fid);
+fid = fopen([temp_dir 'FN_MDP.txt'],'w');fwrite(fid,f); fclose(fid);
 
 % RemLactation
 lac_H = readtable([cd_H FN_LAC '_headers.txt'],'ReadVariableNames',0);    % read variable names
 lac_H = lac_H{:,:}';                          % convert to cell array and transpose
-writecell(lac_H,[newdir 'FN_LAC.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_LAC.txt"+' '"' cd FN_LAC '.txt" "'  newdir 'FN_LAC.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_LAC.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
+writecell(lac_H,[temp_dir 'FN_LAC.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_LAC.txt"+' '"' cd FN_LAC '.txt" "'  temp_dir 'FN_LAC.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_LAC.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
 f=f(1:length(f)-1);
-fid = fopen([newdir 'FN_LAC.txt'],'w');fwrite(fid,f); fclose(fid);
+fid = fopen([temp_dir 'FN_LAC.txt'],'w');fwrite(fid,f); fclose(fid);
 
 % HemAnimal
 ani_H = readtable([cd_H FN_ANI '_headers.txt'],'ReadVariableNames',0);    % read variable names
 ani_H = ani_H{:,:}';                          % convert to cell array and transpose
-writecell(ani_H,[newdir 'FN_ANI.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_ANI.txt"+' '"' cd FN_ANI '.txt" "'  newdir 'FN_ANI.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_ANI.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
+writecell(ani_H,[temp_dir 'FN_ANI.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_ANI.txt"+' '"' cd FN_ANI '.txt" "'  temp_dir 'FN_ANI.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_ANI.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
 f=f(1:length(f)-1);
-fid = fopen([newdir 'FN_ANI.txt'],'w');fwrite(fid,f); fclose(fid);
+fid = fopen([temp_dir 'FN_ANI.txt'],'w');fwrite(fid,f); fclose(fid);
 
 clear mdp_H lac_H ani_H ans
 
@@ -54,7 +52,7 @@ clear mdp_H lac_H ani_H ans
 FN_MDP = 'FN_MDP';      % History Animal
 FN_LAC = 'FN_LAC';  % History Animal Lactation Info
 FN_ANI = 'FN_ANI';  % History Animal Daily Data
-cd = newdir;          % new current directory
+cd = temp_dir;          % new current directory
 
 
 %% STEP 1 - load tables in matlab
@@ -69,7 +67,7 @@ clear i j FN_MDP FN_LAC FN_ANI cd ext
 
 % Read tables
 %   HEMANIMAL
-opts = detectImportOptions(FN{1}); % detect import options
+opts = detectImportOptions(FN{1},'Delimiter',';'); % detect import options
 opts.SelectedVariableNames = {'AniId','AniName','AniUserNumber','AniLifeNumber','AniBirthday'}; % select variable names
 opts = setvartype(opts,{'AniId','AniUserNumber'},'double');  % set variable type to double
 opts = setvartype(opts,{'AniName','AniLifeNumber'},'char');  % set variable type to char
@@ -77,14 +75,14 @@ opts = setvartype(opts,{'AniBirthday'},'datetime');          % set variable type
 a = readtable(FN{1},opts);   % read table
 
 %   REMLACTATION
-opts = detectImportOptions(FN{2});  % detect import options
+opts = detectImportOptions(FN{2},'Delimiter',';');  % detect import options
 opts.SelectedVariableNames = {'LacId','LacAniId','LacNumber','LacCalvingDate'}; % select variable names
 opts = setvartype(opts,{'LacId','LacAniId','LacNumber'},'double'); % set variable type to double
 opts = setvartype(opts,{'LacCalvingDate'},'datetime'); % set variable type to datetime
 b = readtable(FN{2},opts);   % read table
 
 %   PRMMILKDAYPRODUCTION
-opts = detectImportOptions(FN{3});  % detect import options
+opts = detectImportOptions(FN{3},'Delimiter',';');  % detect import options
 opts.SelectedVariableNames = {'MdpId','MdpAniId','MdpProductionDate','MdpDayProduction','MdpISK','MdpMilkings','MdpRefusals','MdpFailures','MdpFatPercentage','MdpProteinPercentage','MdpLactosePercentage','MdpSCC','MdpAverageWeight'};  % select variable names
 opts = setvartype(opts,{'MdpId','MdpAniId','MdpDayProduction','MdpISK','MdpMilkings','MdpRefusals','MdpFailures','MdpFatPercentage','MdpProteinPercentage','MdpLactosePercentage','MdpSCC','MdpAverageWeight'},'double'); % set variable type to double
 opts = setvartype(opts,{'MdpProductionDate'},'datetime'); % set variable type to datetime

@@ -1,4 +1,4 @@
-function OUT = DLV_dailydata_v55(cd,FN_HA,FN_HALI,FN_HADD,cd_H)
+function OUT = DLV_dailydata_v55(cd,FN_HA,FN_HALI,FN_HADD,cd_H,temp_dir)
 % This function produces the 'daily data' from the delaval backups
 % >>> software version v5.5
 %
@@ -19,34 +19,32 @@ function OUT = DLV_dailydata_v55(cd,FN_HA,FN_HALI,FN_HADD,cd_H)
 %
 %
 %% STEP 0: combine header and results files
-newdir = 'C:\Users\u0084712\Documents\Box Sync\Documents\MastiMan\Research\Data mining\BAKfiles scripts\tempFiles\';    % in this folder we store the tempfiles
-
 % History Animal
 ha_H = readtable([cd_H FN_HA '_headers.txt'],'ReadVariableNames',0);    % read variable names
 ha_H = ha_H{:,:}';                          % convert to cell array and transpose
-writecell(ha_H,[newdir 'FN_HA.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_HA.txt"+' '"' cd FN_HA '.txt" "'  newdir 'FN_HA.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_HA.txt'],'r'); f=fread(fid,'*char')'; fclose(fid); % open en read combined data
+writecell(ha_H,[temp_dir 'FN_HA.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_HA.txt"+' '"' cd FN_HA '.txt" "'  temp_dir 'FN_HA.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_HA.txt'],'r'); f=fread(fid,'*char')'; fclose(fid); % open en read combined data
 f=f(1:length(f)-1); % remove last BOM character
-fid = fopen([newdir 'FN_HA.txt'],'w');fwrite(fid,f); fclose(fid); % rewrite and close
+fid = fopen([temp_dir 'FN_HA.txt'],'w');fwrite(fid,f); fclose(fid); % rewrite and close
 
 % History Animal Lactation Info
 hali_H = readtable([cd_H FN_HALI '_headers.txt'],'ReadVariableNames',0);    % read variable names
 hali_H = hali_H{:,:}';                          % convert to cell array and transpose
-writecell(hali_H,[newdir 'FN_HALI.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_HALI.txt"+' '"' cd FN_HALI '.txt" "'  newdir 'FN_HALI.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_HALI.txt'],'r'); f=fread(fid,'*char')'; fclose(fid); % open en read combined data
+writecell(hali_H,[temp_dir 'FN_HALI.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_HALI.txt"+' '"' cd FN_HALI '.txt" "'  temp_dir 'FN_HALI.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_HALI.txt'],'r'); f=fread(fid,'*char')'; fclose(fid); % open en read combined data
 f=f(1:length(f)-1); % remove last BOM character
-fid = fopen([newdir 'FN_HALI.txt'],'w');fwrite(fid,f); fclose(fid); % rewrite and close
+fid = fopen([temp_dir 'FN_HALI.txt'],'w');fwrite(fid,f); fclose(fid); % rewrite and close
 
 % History Animal Daily Data
 hadd_H = readtable([cd_H FN_HADD '_headers.txt'],'ReadVariableNames',0);    % read variable names
 hadd_H = hadd_H{:,:}';                          % convert to cell array and transpose
-writecell(hadd_H,[newdir 'FN_HADD.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_HADD.txt"+' '"' cd FN_HADD '.txt" "'  newdir 'FN_HADD.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_HADD.txt'],'r'); f=fread(fid,'*char')'; fclose(fid); % open en read combined data
+writecell(hadd_H,[temp_dir 'FN_HADD.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_HADD.txt"+' '"' cd FN_HADD '.txt" "'  temp_dir 'FN_HADD.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_HADD.txt'],'r'); f=fread(fid,'*char')'; fclose(fid); % open en read combined data
 f=f(1:length(f)-1); % remove last BOM character
-fid = fopen([newdir 'FN_HADD.txt'],'w');fwrite(fid,f); fclose(fid); % rewrite and close
+fid = fopen([temp_dir 'FN_HADD.txt'],'w');fwrite(fid,f); fclose(fid); % rewrite and close
 
 clear ha_H hali_H hadd_H ans
 
@@ -54,7 +52,7 @@ clear ha_H hali_H hadd_H ans
 FN_HA = 'FN_HA';      % History Animal
 FN_HALI = 'FN_HALI';  % History Animal Lactation Info
 FN_HADD = 'FN_HADD';  % History Animal Daily Data
-cd = newdir;          % new current directory
+cd = temp_dir;          % new current directory
 
 %% STEP 1 - load tables in matlab
 % Combine filenames in one variable (redundant step)
@@ -67,21 +65,21 @@ end
 clear i FN_HA FN_HALI FN_HADD FNS cd
 
 %   HISTORY ANIMAL
-opts = detectImportOptions(FN{1});  % detect import options
+opts = detectImportOptions(FN{1},'Delimiter',';');  % detect import options
 opts.SelectedVariableNames = {'OID','ReferenceId','Number','OffRegNumber','Name','BirthDate'};% selected variable names
 opts = setvartype(opts,{'OID','ReferenceId','Number'},'double'); % set var type to double
 opts = setvartype(opts,{'BirthDate'},'datetime'); % set var type to datetime
 a = readtable(FN{1},opts);  % read table 
 
 %   HISTORY ANIMAL LACTATION INFO
-opts = detectImportOptions(FN{2});  % detect import options
+opts = detectImportOptions(FN{2},'Delimiter',';');  % detect import options
 opts.SelectedVariableNames = {'OID','Animal','LactationNumber','StartDate'};% selected variable names
 opts = setvartype(opts,{'OID','Animal','LactationNumber'},'double');% set var type to double
 opts = setvartype(opts,{'StartDate'},'datetime');
 b = readtable(FN{2},opts); % read table 
 
 % 	HISTORY ANIMAL DAILY DATA
-opts = detectImportOptions(FN{3}); % detect import options
+opts = detectImportOptions(FN{3},'Delimiter',';'); % detect import options
 opts.SelectedVariableNames = {'OID','BasicAnimal','DayDate','Animal','DIM','LactationNumber','DailyYield','Last7DayAvg','MilkingDurationInSec','Milkings','Kickoffs','Incompletes'};% selected variable names
 opts = setvartype(opts,{'OID','BasicAnimal','DIM','Animal','LactationNumber','DailyYield','Last7DayAvg','MilkingDurationInSec','Milkings','Kickoffs','Incompletes'},'double');% set var type to double
 opts = setvartype(opts,{'DayDate'},'datetime'); % set var type to datetime

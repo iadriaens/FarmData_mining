@@ -18,23 +18,32 @@ close all
 clc
 datetime.setDefaultFormats('defaultdate','dd-MM-yyyy');
 
-%% Store and collect file data
+%% STEP 1: Hard code directories
 
 % directory of txt files with data
-cd = 'C:\Users\u0084712\Documents\Box Sync\Documents\MastiMan\Data\Data sets\Backup files\testSQLOUTPUT_Lelytxt\';     % all data files in txt format
-cd_H = 'C:\Users\u0084712\Documents\Box Sync\Documents\MastiMan\Data\Data sets\Backup files\testSQLOUTPUT_Lelyhead\';   % all header files
+cd_txt = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\4.OUTPUT3txt\';       % all data files in txt format
+cd_H = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\4.OUTPUT3head\';        % all header files
 
+% temporary directory
+temp_dir = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\5.TEMPFILES\';
+
+% directory of output data
+savedir_DAY = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\6.ALLDAY\';
+savedir_MILK = 'C:\Users\u0132268\Documents\FarmData_Mining_SQL_Matlab_Files\6.ALLMILK\';
+
+
+%% Store and collect file data
 % find all the files in the folder
 FNfiles = ls(cd);        % this is the list with files in the folder where I saved the MPR results of MCC
-ind = []; for i  = 1:length(FNfiles); if isempty(find(contains(FNfiles(i,:),'.txt'))) == 1; ind = [ind; i]; end; end; % find no filenames
+ind = []; for i  = 1:size(FNfiles,1); if isempty(find(contains(FNfiles(i,:),'.txt'))) == 1; ind = [ind; i]; end; end; % find no filenames
 FNfiles(ind,:) = []; clear ind     % delete
 
 % find all farmnames = for all files everything before '_'
-files = array2table((1:length(FNfiles))','VariableNames',{'No'});
-files.Farm(:,:) = repmat({'na'},length(FNfiles),1);
+files = array2table((1:size(FNfiles,1))','VariableNames',{'No'});
+files.Farm(:,:) = repmat({'na'},size(FNfiles,1),1);
 files.Date(:,1) = NaT;
-files.Table(:,:) = repmat({'na'},length(FNfiles),1);
-files.FN(:,:) = repmat({'na'},length(FNfiles),1);
+files.Table(:,:) = repmat({'na'},size(FNfiles,1),1);
+files.FN(:,:) = repmat({'na'},size(FNfiles,1),1);
 for i = 1:length(FNfiles(:,1))   % run through all the files in the folder
     numLoc = regexp(FNfiles(i,:),'_');       % this functions finds the unique positions of 2 successive numbers in a filename
     endLoc = regexp(FNfiles(i,:),'.txt');    % this gives the end of the filename
@@ -70,13 +79,13 @@ for i = 1:length(Farms)
         D = ['BU' datestr(bakdates(j),'yyyyMMdd')];   % prepare structure - names = dates
        
         % Define filenames for this farm: MilkDayProduction, Lactation, Animal
-        cd = 'C:\Users\u0084712\Documents\Box Sync\Documents\MastiMan\Data\Data sets\Backup files\testSQLOUTPUT_Lelytxt\';     % all data files in txt format
+        cd = 'C:\Users\u0132268\Documents\LORE\MastiManResearch\Github\FarmData_mining\OUTPUT_Lelytxt\';     % all data files in txt format
         FN_MDP = files.FN{find(contains(files.Farm,Farms{i})== 1 & datenum(files.Date) == datenum(bakdates(j)) & contains(files.Table,'PrmMilkDayProduction')==1,1,'first')};
         FN_LAC = files.FN{find(contains(files.Farm,Farms{i})== 1 & datenum(files.Date) == datenum(bakdates(j)) & contains(files.Table,'RemLactation')==1,1,'first')};
         FN_ANI = files.FN{find(contains(files.Farm,Farms{i})== 1 & datenum(files.Date) == datenum(bakdates(j)) & contains(files.Table,'HemAnimal')==1,1,'first')};
         
         % run function to extract and combine data
-        DAY.(Farms{i}).(D) = LELY_dailydata(cd,FN_MDP,FN_LAC,FN_ANI,cd_H);
+        DAY.(Farms{i}).(D) = LELY_dailydata(cd,FN_MDP,FN_LAC,FN_ANI,cd_H,temp_dir);
     end
     
     % find unique rows
@@ -98,7 +107,7 @@ end
 
 % save statements
 fields = fieldnames(DAYm);
-savedir = 'C:\Users\u0084712\Documents\Box Sync\Documents\MastiMan\Data\Data sets\Backup files\ALLDAY\';
+savedir = 'C:\Users\u0132268\Documents\LORE\MastiManResearch\Github\FarmData_mining\ALLDAY\';
 for i = 1:length(fields)
     mindate = datestr(min(DAYm.(fields{i}).Date),'yyyymmdd');
     maxdate = datestr(max(DAYm.(fields{i}).Date),'yyyymmdd');
@@ -129,14 +138,14 @@ for i = 1:20%length(Farms)
         D = ['BU' datestr(bakdates(j),'yyyyMMdd')];   % prepare structure - names = dates
        
         % Define filenames for this farm: MilkDayProduction, Lactation, Animal
-        cd = 'C:\Users\u0084712\Documents\Box Sync\Documents\MastiMan\Data\Data sets\Backup files\testSQLOUTPUT_Lelytxt\';     % all data files in txt format
+        cd = 'C:\Users\u0132268\Documents\LORE\MastiManResearch\Github\FarmData_mining\OUTPUT_Lelytxt\';     % all data files in txt format
         FN_DEV = files.FN{find(contains(files.Farm,Farms{i})== 1 & datenum(files.Date) == datenum(bakdates(j)) & contains(files.Table,'PrmDeviceVisit')==1,1,'first')};
         FN_LAC = files.FN{find(contains(files.Farm,Farms{i})== 1 & datenum(files.Date) == datenum(bakdates(j)) & contains(files.Table,'RemLactation')==1,1,'first')};
         FN_ANI = files.FN{find(contains(files.Farm,Farms{i})== 1 & datenum(files.Date) == datenum(bakdates(j)) & contains(files.Table,'HemAnimal')==1,1,'first')};
         FN_MVIS = files.FN{find(contains(files.Farm,Farms{i})== 1 & datenum(files.Date) == datenum(bakdates(j)) & contains(files.Table,'PrmMilkVisit')==1,1,'first')};
 
         % run function to extract and combine data
-        MILK.(Farms{i}).(D) = LELY_milkdata(cd,FN_DEV,FN_LAC,FN_ANI,FN_MVIS,cd_H);
+        MILK.(Farms{i}).(D) = LELY_milkdata(cd,FN_DEV,FN_LAC,FN_ANI,FN_MVIS,cd_H,temp_dir);
     end
     
     % find unique rows
@@ -160,7 +169,7 @@ end
 % save statements
 
 fields = fieldnames(MILKm);
-savedir = 'C:\Users\u0084712\Documents\Box Sync\Documents\MastiMan\Data\Data sets\Backup files\ALLMILK\';
+savedir = 'C:\Users\u0132268\Documents\LORE\MastiManResearch\Github\FarmData_mining\ALLMILK\';
 for i = 1:length(fields)
     mindate = datestr(min(MILKm.(fields{i}).EndTime),'yyyymmdd');
     maxdate = datestr(max(MILKm.(fields{i}).EndTime),'yyyymmdd');

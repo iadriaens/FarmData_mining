@@ -1,4 +1,4 @@
-function OUT = LELY_milkdata(cd,FN_DEV,FN_LAC,FN_ANI,FN_MVIS,cd_H)
+function OUT = LELY_milkdata(cd,FN_DEV,FN_LAC,FN_ANI,FN_MVIS,cd_H,temp_dir)
 % This function constructs the 'milk data' from the Lely backups
 % >>> all software versions
 % 
@@ -18,43 +18,41 @@ function OUT = LELY_milkdata(cd,FN_DEV,FN_LAC,FN_ANI,FN_MVIS,cd_H)
 % STEP 4: Check and correct for errors
 %
 %% STEP 0: combine header and results files
-newdir = 'C:\Users\u0084712\Documents\Box Sync\Documents\MastiMan\Research\Data mining\BAKfiles scripts\tempFiles\';    % in this folder we store the tempfiles
-
 % PrmDeviceVisit
 dv_H = readtable([cd_H FN_DEV '_headers.txt'],'ReadVariableNames',0);    % read variable names
 dv_H = dv_H{:,:}';                          % convert to cell array and transpose
-writecell(dv_H,[newdir 'FN_DEV.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_DEV.txt"+' '"' cd FN_DEV '.txt" "'  newdir 'FN_DEV.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_DEV.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
+writecell(dv_H,[temp_dir 'FN_DEV.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_DEV.txt"+' '"' cd FN_DEV '.txt" "'  temp_dir 'FN_DEV.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_DEV.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
 f=f(1:length(f)-1);
-fid = fopen([newdir 'FN_DEV.txt'],'w');fwrite(fid,f); fclose(fid);
+fid = fopen([temp_dir 'FN_DEV.txt'],'w');fwrite(fid,f); fclose(fid);
 
 % RemLactation
 lac_H = readtable([cd_H FN_LAC '_headers.txt'],'ReadVariableNames',0);    % read variable names
 lac_H = lac_H{:,:}';                          % convert to cell array and transpose
-writecell(lac_H,[newdir 'FN_LAC.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_LAC.txt"+' '"' cd FN_LAC '.txt" "'  newdir 'FN_LAC.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_LAC.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
+writecell(lac_H,[temp_dir 'FN_LAC.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_LAC.txt"+' '"' cd FN_LAC '.txt" "'  temp_dir 'FN_LAC.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_LAC.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
 f=f(1:length(f)-1);
-fid = fopen([newdir 'FN_LAC.txt'],'w');fwrite(fid,f); fclose(fid);
+fid = fopen([temp_dir 'FN_LAC.txt'],'w');fwrite(fid,f); fclose(fid);
 
 % HemAnimal
 ani_H = readtable([cd_H FN_ANI '_headers.txt'],'ReadVariableNames',0);    % read variable names
 ani_H = ani_H{:,:}';                          % convert to cell array and transpose
-writecell(ani_H,[newdir 'FN_ANI.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_ANI.txt"+' '"' cd FN_ANI '.txt" "'  newdir 'FN_ANI.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_ANI.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
+writecell(ani_H,[temp_dir 'FN_ANI.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_ANI.txt"+' '"' cd FN_ANI '.txt" "'  temp_dir 'FN_ANI.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_ANI.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
 f=f(1:length(f)-1);
-fid = fopen([newdir 'FN_ANI.txt'],'w');fwrite(fid,f); fclose(fid);
+fid = fopen([temp_dir 'FN_ANI.txt'],'w');fwrite(fid,f); fclose(fid);
 
 % BenMilkVisit
 mv_H = readtable([cd_H FN_MVIS '_headers.txt'],'ReadVariableNames',0);    % read variable names
 mv_H = mv_H{:,:}';                          % convert to cell array and transpose
-writecell(mv_H,[newdir 'FN_MVIS.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_MVIS.txt"+' '"' cd FN_MVIS '.txt" "'  newdir 'FN_MVIS.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_MVIS.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
+writecell(mv_H,[temp_dir 'FN_MVIS.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_MVIS.txt"+' '"' cd FN_MVIS '.txt" "'  temp_dir 'FN_MVIS.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_MVIS.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
 f=f(1:length(f)-1);
-fid = fopen([newdir 'FN_MVIS.txt'],'w');fwrite(fid,f); fclose(fid);
+fid = fopen([temp_dir 'FN_MVIS.txt'],'w');fwrite(fid,f); fclose(fid);
 
 clear dv_H lac_H ani_H mv_H ans
 
@@ -63,7 +61,7 @@ FN_DEV = 'FN_DEV';      % PrmDeviceVisit
 FN_LAC = 'FN_LAC';      % RemLactation
 FN_ANI = 'FN_ANI';      % HemAnimal
 FN_MVIS = 'FN_MVIS';    % BenMilkVisit
-cd = newdir;          % new current directory
+cd = temp_dir;          % new current directory
 
 
 %% STEP 1 - load tables in matlab
@@ -78,7 +76,7 @@ clear i j FN_MVIS FN_DEV FN_LAC FN_ANI cd ext
 
 % Read tables
 % HEMANIMAL
-opts = detectImportOptions(FN{1}); 
+opts = detectImportOptions(FN{1},'Delimiter',';'); 
 opts.SelectedVariableNames = {'AniId','AniName','AniUserNumber','AniLifeNumber','AniBirthday'};
 opts = setvartype(opts,{'AniId','AniUserNumber'},'double');
 opts = setvartype(opts,{'AniName','AniLifeNumber'},'char');
@@ -86,21 +84,21 @@ opts = setvartype(opts,{'AniBirthday'},'datetime');
 a = readtable(FN{1},opts);   % HemAnimal
 
 % REMLACTATION
-opts = detectImportOptions(FN{2}); 
+opts = detectImportOptions(FN{2},'Delimiter',';'); 
 opts.SelectedVariableNames = {'LacId','LacAniId','LacNumber','LacCalvingDate'};
 opts = setvartype(opts,{'LacId','LacAniId','LacNumber'},'double');
 opts = setvartype(opts,{'LacCalvingDate'},'datetime');
 b = readtable(FN{2},opts);   % RemLactation
 
 % PRMDEVICEVISIT
-opts = detectImportOptions(FN{3}); 
+opts = detectImportOptions(FN{3},'Delimiter',';'); 
 opts.SelectedVariableNames = {'DviId','DviAniId','DviStartTime','DviEndTime','DviIntervalTime'};
 opts = setvartype(opts,{'DviId','DviAniId','DviIntervalTime'},'double');
 opts = setvartype(opts,{'DviStartTime','DviEndTime'},'datetime');
 c = readtable(FN{3},opts);   % PrmDeviceVisit
 
 % PRMMILKVISIT
-opts = detectImportOptions(FN{4}); 
+opts = detectImportOptions(FN{4},'Delimiter',';'); 
 opts.SelectedVariableNames = {'MviId','MviDviId','MviMilkYield','MviMilkDuration','MviMilkSpeedMax','MviWeight','MviMilkTemperature','MviMilkDestination','MviMilkTime','MviLFMilkYield','MviRFMilkYield','MviLRMilkYield','MviRRMilkYield','MviLFConductivity','MviRFConductivity','MviLRConductivity','MviRRConductivity'};
 opts = setvartype(opts,{'MviId','MviDviId','MviMilkYield','MviMilkDuration','MviMilkSpeedMax','MviWeight','MviMilkTemperature','MviMilkDestination','MviMilkTime','MviLFMilkYield','MviRFMilkYield','MviLRMilkYield','MviRRMilkYield','MviLFConductivity','MviRFConductivity','MviLRConductivity','MviRRConductivity'},'double');
 d = readtable(FN{4},opts);   % PrmMilkVisit

@@ -1,4 +1,4 @@
-function OUT = DLV_milkdata_v45(cd,FN_BA,FN_ALS,FN_SMY,FN_VMY,cd_H)
+function OUT = DLV_milkdata_v45(cd,FN_BA,FN_ALS,FN_SMY,FN_VMY,cd_H,temp_dir)
 % This function constructs the 'milk data' from the delaval backups
 % >>> software version v4.5
 %
@@ -17,49 +17,47 @@ function OUT = DLV_milkdata_v45(cd,FN_BA,FN_ALS,FN_SMY,FN_VMY,cd_H)
 % STEP 4: Preprocessing to correct for errors
 %
 %% STEP 0: combine header and results files
-newdir = 'C:\Users\u0084712\Documents\Box Sync\Documents\MastiMan\Research\Data mining\BAKfiles scripts\tempFiles\';    % in this folder we store the tempfiles
-
 % Basic Animal
 ba_H = readtable([cd_H FN_BA '_headers.txt'],'ReadVariableNames',0);    % read variable names
 ba_H = ba_H{:,:}';                          % convert to cell array and transpose
-writecell(ba_H,[newdir 'FN_BA.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_BA.txt"+' '"' cd FN_BA '.txt" "'  newdir 'FN_BA.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_BA.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
+writecell(ba_H,[temp_dir 'FN_BA.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_BA.txt"+' '"' cd FN_BA '.txt" "'  temp_dir 'FN_BA.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_BA.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
 f=f(1:length(f)-1);
-fid = fopen([newdir 'FN_BA.txt'],'w');fwrite(fid,f); fclose(fid);
+fid = fopen([temp_dir 'FN_BA.txt'],'w');fwrite(fid,f); fclose(fid);
 
 % Animal Lactation Summary
 als_H = readtable([cd_H FN_ALS '_headers.txt'],'ReadVariableNames',0);    % read variable names
 als_H = als_H{:,:}';                          % convert to cell array and transpose
-writecell(als_H,[newdir 'FN_ALS.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_ALS.txt"+' '"' cd FN_ALS '.txt" "'  newdir 'FN_ALS.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_ALS.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
+writecell(als_H,[temp_dir 'FN_ALS.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_ALS.txt"+' '"' cd FN_ALS '.txt" "'  temp_dir 'FN_ALS.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_ALS.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
 f=f(1:length(f)-1);
-fid = fopen([newdir 'FN_ALS.txt'],'w');fwrite(fid,f); fclose(fid);
+fid = fopen([temp_dir 'FN_ALS.txt'],'w');fwrite(fid,f); fclose(fid);
 
 % Session Milk Yield
 smy_H = readtable([cd_H FN_SMY '_headers.txt'],'ReadVariableNames',0);    % read variable names
 smy_H = smy_H{:,:}';                          % convert to cell array and transpose
-writecell(smy_H,[newdir 'FN_SMY.txt'],'Delimiter',';');  % write headernames to file
-system(['copy "' newdir 'FN_SMY.txt"+' '"' cd FN_SMY '.txt" "'  newdir 'FN_SMY.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_SMY.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
+writecell(smy_H,[temp_dir 'FN_SMY.txt'],'Delimiter',';');  % write headernames to file
+system(['copy "' temp_dir 'FN_SMY.txt"+' '"' cd FN_SMY '.txt" "'  temp_dir 'FN_SMY.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_SMY.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
 f=f(1:length(f)-1);
-fid = fopen([newdir 'FN_SMY.txt'],'w');fwrite(fid,f); fclose(fid);
+fid = fopen([temp_dir 'FN_SMY.txt'],'w');fwrite(fid,f); fclose(fid);
 
 % Voluntary Session Milk Yield
 vmy_H = readtable([cd_H FN_VMY '_headers.txt'],'ReadVariableNames',0);    % read variable names
 vmy_H = vmy_H{1:36,:}';                          % convert to cell array and transpose
-writecell(vmy_H,[newdir 'FN_VMY.txt'],'Delimiter',';');  % write headernames to file
+writecell(vmy_H,[temp_dir 'FN_VMY.txt'],'Delimiter',';');  % write headernames to file
 
 % read first 35 colums of VMY using textscan
 fid = fopen([cd FN_VMY '.txt'],'r'); f = textscan(fid,'%f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %*[^\n]','Delimiter',';'); fclose(fid);
 for i = 1:36; vmy(:,i) = f{:,i}; end
-writematrix(vmy,[newdir 'new_vmy.txt'],'Delimiter',';');
+writematrix(vmy,[temp_dir 'new_vmy.txt'],'Delimiter',';');
 
-system(['copy "' newdir 'FN_VMY.txt"+' '"' newdir 'new_vmy.txt" "'  newdir 'FN_VMY.txt"']);  % combine files using system cmd
-fid = fopen([newdir 'FN_VMY.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
+system(['copy "' temp_dir 'FN_VMY.txt"+' '"' temp_dir 'new_vmy.txt" "'  temp_dir 'FN_VMY.txt"']);  % combine files using system cmd
+fid = fopen([temp_dir 'FN_VMY.txt'],'r'); f=fread(fid,'*char')'; fclose(fid);
 f=f(1:length(f)-1);
-fid  = fopen([newdir 'FN_VMY.txt'],'w'); fwrite(fid,f);fclose(fid);
+fid  = fopen([temp_dir 'FN_VMY.txt'],'w'); fwrite(fid,f);fclose(fid);
 
 
 clear als_H ba_H smy_H vmy_H ans
@@ -69,7 +67,7 @@ FN_BA = 'FN_BA';        % Basic Animal
 FN_ALS = 'FN_ALS';      % Animal Lactation Summary
 FN_SMY = 'FN_SMY';      % Session Milk Yield
 FN_VMY = 'FN_VMY';      % Voluntary Session Milk Yield
-cd = newdir;            % new current directory
+cd = temp_dir;            % new current directory
 
 
 
@@ -83,7 +81,7 @@ clear i j FN_BA FN_ALS FN_SMY FN_VMY FNS cd ext FN_SMY FN_VMY
 
 % read tables
 % BASIC ANIMAL
-opts = detectImportOptions(FN{1});
+opts = detectImportOptions(FN{1},'Delimiter',';');
 opts = setvartype(opts,{'OID','Number'},'double');
 opts = setvartype(opts,{'BirthDate'},'datetime');
 opts = setvartype(opts,{'Name','OfficialRegNo'},'char');
@@ -91,21 +89,21 @@ opts.SelectedVariableNames = {'OID','Number','OfficialRegNo','Name','BirthDate'}
 a = readtable(FN{1},opts);
     
 % ANIMAL LACTATION SUMMARY
-opts = detectImportOptions(FN{2});
+opts = detectImportOptions(FN{2},'Delimiter',';');
 opts = setvartype(opts,{'OID','Animal','LactationNumber'},'double');
 opts = setvartype(opts,{'StartDate'},'datetime');
 opts.SelectedVariableNames = {'OID','Animal','LactationNumber','StartDate'};
 b = readtable(FN{2},opts);   % ALS
 
 % SESSION MILK YIELD
-opts = detectImportOptions(FN{3});
-opts = setvartype(opts,{'OID','BasicAnimal','TotalYield','Destination','SessionNo'},'double');
+opts = detectImportOptions(FN{3},'Delimiter',';');
+opts = setvartype(opts,{'OID','BasicAnimal','MilkingDevice','TotalYield','Destination','SessionNo'},'double');
 opts = setvartype(opts,{'BeginTime','EndTime','PreviousEndTime'},'datetime');
-opts.SelectedVariableNames = {'OID','BasicAnimal','TotalYield','BeginTime','EndTime','PreviousEndTime','Destination','SessionNo'};
+opts.SelectedVariableNames = {'OID','BasicAnimal','TotalYield','MilkingDevice','BeginTime','EndTime','PreviousEndTime','Destination','SessionNo'};
 c = readtable(FN{3},opts);               % SMY
 
 % VOLUNTARY SESSION MILK YIELD
-opts = detectImportOptions(FN{4});
+opts = detectImportOptions(FN{4},'Delimiter',';');
 opts = setvartype(opts,{'OID','QuarterLFYield','QuarterRFYield','QuarterLRYield','QuarterRRYield','ConductivityLF','ConductivityRF','ConductivityLR','ConductivityRR','BloodLF','BloodRF','BloodLR','BloodRR','PeakFlowLF','PeakFlowRF','PeakFlowLR','PeakFlowRR','MeanFlowLF','MeanFlowRF','MeanFlowLR','MeanFlowRR','Mdi','NotMilkedTeats','Incomplete','Kickoff','MilkType'},'double');
 opts.SelectedVariableNames = {'OID','QuarterLFYield','QuarterRFYield','QuarterLRYield','QuarterRRYield','ConductivityLF','ConductivityRF','ConductivityLR','ConductivityRR','BloodLF','BloodRF','BloodLR','BloodRR','PeakFlowLF','PeakFlowRF','PeakFlowLR','PeakFlowRR','MeanFlowLF','MeanFlowRF','MeanFlowLR','MeanFlowRR','Mdi','NotMilkedTeats','Incomplete','Kickoff','MilkType'};
 d = readtable(FN{4},opts);               % VMY
@@ -117,7 +115,7 @@ clear F1 F2 F3 F4 FN j exttype opts DT1 DT2
 %% STEP 2 : select columns we want to keep in each table
 col_BA = {'OID','Number','OfficialRegNo','Name','BirthDate'};
 col_ALS = {'OID','Animal','LactationNumber','StartDate'};
-col_SMY = {'OID','BasicAnimal','TotalYield','BeginTime','EndTime','PreviousEndTime','Destination','SessionNo'};
+col_SMY = {'OID','BasicAnimal','MilkingDevice','TotalYield','BeginTime','EndTime','PreviousEndTime','Destination','SessionNo'};
 col_VMY = {'OID','QuarterLFYield','QuarterRFYield','QuarterLRYield','QuarterRRYield','ConductivityLF','ConductivityRF','ConductivityLR','ConductivityRR','BloodLF','BloodRF','BloodLR','BloodRR','PeakFlowLF','PeakFlowRF','PeakFlowLR','PeakFlowRR','MeanFlowLF','MeanFlowRF','MeanFlowLR','MeanFlowRR','Mdi','NotMilkedTeats','Incomplete','Kickoff','MilkType'};
 
 idx_BA = zeros(1,length(col_BA));        % to fill in - column indices
@@ -149,7 +147,7 @@ d = d(:,idx_VMY);   % select columns to keep
 % rename columns for merging - there are in order of col_XXX
 a.Properties.VariableNames = {'BA','Number','OfficialRegNo','Name','BDate'};    %BA
 b.Properties.VariableNames = {'OID','BA','Lac','Calving'};      % ALS
-c.Properties.VariableNames = {'OID2','BA','TMY','BeginTime','EndTime','PEndTime','Dest','SesNo'};  % SMY
+c.Properties.VariableNames = {'OID2','BA','VMXnr','TMY','BeginTime','EndTime','PEndTime','Dest','SesNo'};  % SMY
 d.Properties.VariableNames = {'OID2','MYLF','MYRF','MYLR','MYRR','ECLF','ECRF','ECLR','ECRR','BloodLF','BloodRF','BloodLR','BloodRR','PFLF','PFRF','PFLR','PFRR','MFLF','MFRF','MFLR','MFRR','MDI','NotMilkedTeats','Incomplete','Kickoff','MilkType'};
 
 clear idx_ALS idx_BA idx_AHD idx_VMY idx_SMY
@@ -212,7 +210,7 @@ OUT.DIM(:,1) = OUT.DIM(:,1) + rem(datenum(datestr(OUT.EndTime(:,1))),1);
 %% STEP 6: preprocessing of table OUT
 % Select the cols needed
 col_OUT = {'OfficialRegNo','BA','Number','Name','BDate','Calving','Lac',...
-           'DIM','BeginTime','EndTime','PEndTime','TMY','Dest','SesNo',...
+           'DIM','VMXnr','BeginTime','EndTime','PEndTime','TMY','Dest','SesNo',...
            'MDI','NotMilkedTeats','Incomplete','Kickoff','MilkType',...
            'MYLF','MYRF','MYLR','MYRR','ECLF','ECRF','ECLR','ECRR','BloodLF','BloodRF','BloodLR','BloodRR',...
            'PFLF','PFRF','PFLR','PFRR','MFLF','MFRF','MFLR','MFRR'};
